@@ -3,8 +3,6 @@
 </script>
 # File handling
 
-## 
-
 BB1000 Programming in Python
 
 KTH
