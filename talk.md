@@ -1,11 +1,4 @@
-<script type="text/javascript"
-  src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
-</script>
 # File handling
-
-BB1000 Programming in Python
-
-KTH
 
 ---
 
@@ -27,11 +20,32 @@ The built-in `open` function
 
 + `open` accepts a file name and a mode as arguments
 + file name: a string
-+ mode: 'r' for reading; 'w' for writing
++ mode
+    * 'r' for reading
+    * 'w' for writing
+    * 'a' for appending
+    * 'r+' for both reading and writing
+    * 'b' for binary files
 + `open` returns a file object
-+ after reading, the opened file should be closed
 
-Getting help
+Common file attributes
+
++ `name`: the file name
++ `mode`: the mode in which the file was opened
+
+~~~
+>>> f = open('foo.txt', 'r')
+>>> f.name
+'foo.txt'
+>>> f.mode
+'r'
+
+~~~
+
+---
+
+Getting help: `>>> help(open)```
+
 ~~~
 Help on built-in function open in module io:                                     
                                                                                  
@@ -45,7 +59,6 @@ efd=True, opener=None)
     wrapped. (If a file descriptor is given, it is closed when the               
     returned I/O object is closed, unless closefd is set to False.)          
 ~~~
->>> help(open)
 
 ---
 
@@ -53,17 +66,24 @@ efd=True, opener=None)
 
 Methods of file objects:
 
-+ The `read` method
-  Reads the entire file, unless a `size` argument is provided
++ `read`
 
-+ The `readline` method
-  Reads one line from the file
+  * reads the entire file into a string
+  * an optional `size` argument may be given to limit the number of characters read
 
-+ The `readlines` method
-  Reads all lines from the file into a list
++ `readline`
+
+  * reads one line from the file at a time
+
++ `readlines`
+
+  * reads the file into a list of lines
 
 + The `write` method
-  Accepts a string as argument, and writes the string to file
+
+  * accepts a string as argument 
+  * and writes the string to file
+  * returns the number of bytes written
 
 ---
 
@@ -77,15 +97,19 @@ bar
 baz
 ~~~
 
+    >>> open('foo.txt').read()
+    'foo\nbar\nbaz\n' 
+
 ~~~
->>> open('foo.txt').read()
-foo
-'foo\nbar\nbaz\n' 
+>>> open('foo.txt').read(6)
+'foo\nba' 
+
 ~~~
 
 ~~~
 >>> open('foo.txt').readlines()
 ['foo\n', 'bar\n', 'baz\n']          
+
 ~~~
 
 ~~~
@@ -96,6 +120,7 @@ foo
 'bar\n'                                                                          
 >>> f.readline()                                                                 
 'baz\n'                       
+
 ~~~
 
 ---
@@ -144,6 +169,31 @@ print('baz', file=f)
 f.close()
 ~~~
 
+---
+
+## Moving around
+
+A file pointer keeps track of where in the file we are
+
+methods:
+
++ `seek` moves the file pointer to a specific position
++ `tell` returns the current position of the file pointer
+
+~~~
+>>> f = open('foo.txt')
+>>> f.tell()
+0
+>>> f.read(6)
+'foo\nba'
+>>> f.tell()
+6
+>>> f.seek(0)
+0
+>>> f.read()
+'foo\nbar\nbaz\n'
+~~~
+
 
 ---
 
@@ -153,20 +203,28 @@ It is good practice to close a file in the same program unit where opened
 
 ~~~
 f = open('file.txt')
-# work with file
-# ...
+...
 f.close()
 ~~~
 
-Howver, Python is very permissive about it so that if you forget, the file
-will close when you leave the function where it happened
+## Best practice: open with `with`
 
-Alternative way is to use a context manager (a `with` block)
+If you forget, a file
+will close when you leave the function where was open
+
+Best practice is to use a `with` block (context manager)
 
 ~~~
-with open('file.txt') as f:
-    # work with file
-    # ...
+>>> with open('foo.txt') as f:
+...    print(f.read())
+...    print(f'{f.closed=}')
+... print(f'{f.closed)=}')
+foo
+bar
+baz
+
+f.closed=False
+f.closed=True
 ~~~
 
 The file will be closed when you leave the `with` block
