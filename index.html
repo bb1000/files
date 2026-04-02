@@ -173,20 +173,22 @@ layout: false
 
 The built-in `open` function
 
-+ `open` accepts a file name and a mode as arguments
-+ file name: a string
++ accepts a file name and a mode as arguments
 + mode
     * 'r' for reading
     * 'w' for writing
     * 'a' for appending
     * 'r+' for both reading and writing
     * 'b' for binary files
-+ `open` returns a file object
++ returns a file object
 
 Common file attributes
 
 + `name`: the file name
 + `mode`: the mode in which the file was opened
++ `closed`: True/False depending on whether the file is closed or not
+
+---
 
 ~~~
 >>> f = open('foo.txt', 'r')
@@ -194,14 +196,20 @@ Common file attributes
 'foo.txt'
 >>> f.mode
 'r'
+>>> f.closed
+False
+>>> f.close()
+>>> f.closed
+True
 
 ~~~
 
 ---
 
-Getting help: `>>> help(open)```
+Getting help: 
 
 ~~~
+>>> help(open)
 Help on built-in function open in module io:                                     
                                                                                  
 open(file, mode='r', buffering=-1, encoding=None, errors=None, newline=None, clos
